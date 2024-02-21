@@ -5,7 +5,7 @@ cp(in rs)       tax
 <=50000         5%
 
 '''
-'''cost_price=int(input("Enter the cost price of the bike (In Rupees)"))
+cost_price=int(input("Enter the cost price of the bike (In Rupees)"))
 if cost_price>100000:
     tax= 0.15*cost_price
 elif cost_price> 50000 and cost_price<= 100000 :
