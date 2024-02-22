@@ -9,9 +9,9 @@
 
 # dict is basically a object"""
  person: dict(str, Any)={
-     "name"="sanjay"
-     "bloodgroup"=None
-     "age"=19
+     "name":"sanjay"
+     "bloodgroup":None
+     "age":19
  }
 
  
