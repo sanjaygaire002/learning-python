@@ -37,7 +37,7 @@ def r_p_s_game():
         print("\n----------------------------------")
         cont=input("=====DO YOU WANT TO CONTINUE(Y/N)=====").upper()
         if cont=="Y":
-            continue
+            r_p_s_game()
         else:
             
             if u_num> c_num:
