@@ -1,5 +1,5 @@
 recreation of game of life by british mathematician Conway
-# this is a simulation of cornwel's game of life
+# this is a simulation of corway's game of life
 
 # press at any position in grid to alive it, or press g to generate random alive position
 # press space bar to pause or play simulation to next generation
