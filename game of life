@@ -1,1 +1,145 @@
 recreation of game of life by british mathematician Conway
+# this is a simulation of cornwel's game of life
+
+# press at any position in grid to alive it, or press g to generate random alive position
+# press space bar to pause or play simulation to next generation
+# press c to clear the screen
+
+import pygame
+import random
+
+pygame.init()
+# ---------------------------------------------
+BACKGROUND_COLOR="grey"
+LIVE_COLOR="black"
+LINE_COLOR="black"
+WIDTH,HEIGHT=800,800
+TILE=20
+GRIDS_WIDTH=WIDTH//TILE
+GRIDS_HEIGHT=HEIGHT//TILE
+FPS=60
+count=0
+update_frequency=120
+# --------------------------------------------
+# the above values can be adjusted as per need
+screen=pygame.display.set_mode((WIDTH,HEIGHT))
+clock=pygame.time.Clock()
+pygame.display.set_caption("Game of Life")
+def draw(positions):
+    screen.fill(BACKGROUND_COLOR)
+    for position in positions:
+        col, row = position
+        top_left = (col * TILE, row * TILE)
+        pygame.draw.rect(screen, LIVE_COLOR, (*top_left, TILE, TILE))
+    for row in range(GRIDS_HEIGHT):
+        pygame.draw.line(screen,LINE_COLOR,(0,row*TILE),(WIDTH,row*TILE))
+    for column in range(GRIDS_WIDTH):
+        pygame.draw.line(screen,LINE_COLOR,(column*TILE,0),(column*TILE,HEIGHT))   
+def generate(positions):
+    
+    for i in range(random.randint(2*GRIDS_HEIGHT,5*GRIDS_HEIGHT)):
+        x=random.randrange(0,GRIDS_WIDTH)
+        y=random.randrange(0,GRIDS_HEIGHT)
+        pos=(x,y)
+        positions.add(pos)
+def next_gen(positions):
+    all_neighbours=set()
+    new_positions=set()
+    #to check if a position stays alive of not in next gen
+    for position in positions:
+        neighbours=get_neighbours(position)
+        all_neighbours.update(neighbours)
+        count=0
+        for neighbour in neighbours:
+            if neighbour in positions:
+                count+=1
+        if count in [2,3]:
+            new_positions.add(position)
+    # to check if any neighbour is going to be born
+    for position in all_neighbours:
+        neighbours=get_neighbours(position)
+        count=0
+        for neighbour in neighbours:
+            if neighbour in positions:
+                count+=1
+        if count==3:
+            new_positions.add(position)
+    return new_positions
+
+
+def get_neighbours(position):
+    x,y=position
+    neighbours=set()
+    for dx in [-1,0,1]:
+        for dy in [-1,0,1]:
+            
+            nx=x+dx
+            ny=y+dy
+            if nx < 0 or nx>GRIDS_WIDTH or ny < 0 or ny > GRIDS_HEIGHT:
+                continue
+            pos=(nx,ny)
+            if pos==position:
+                continue
+            neighbours.add(pos)
+    return neighbours
+    
+def main():
+    screen.fill(BACKGROUND_COLOR)
+    running=True
+    positions=set()
+    playing=False
+    count=0
+    update_frequency=120
+    # positions.add((10,10))
+    draw(positions) 
+    # draw_position(positions)
+    pygame.display.update()
+
+    while running:
+        draw(positions) 
+        pygame.display.update()
+        clock.tick(FPS)
+        if playing:
+            count+=1
+        if count >= update_frequency:
+            count=0
+            positions=next_gen(positions)
+
+        if playing==True:
+            pygame.display.set_caption("Game of Life-Playing")
+        if playing==False:
+            pygame.display.set_caption("Game of Life-Paused")
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                running=False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = pygame.mouse.get_pos()
+                col = x // TILE
+                row = y // TILE
+                pos = (col, row)
+
+                if pos in positions:
+                    positions.remove(pos)
+                else:
+                    positions.add(pos)
+            if event.type == pygame.KEYDOWN:
+                if event.key==pygame.K_SPACE:
+                    playing= not playing
+                   
+                if event.key==pygame.K_c:
+                    positions=set()
+                    count=0
+                    playing=False
+                if event.key==pygame.K_g:
+                    positions=set()
+                    screen.fill(BACKGROUND_COLOR)
+                    generate(positions)
+
+
+                    
+    pygame.quit()
+
+
+
+if __name__=="__main__":
+    main()
